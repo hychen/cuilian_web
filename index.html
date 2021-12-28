@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-12-28 Tue 19:43 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cuilian Demo 設計文件</title>
+<meta name="author" content="Hsin-Yi Chen" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Cuilian Demo 設計文件</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgb52127f">1. 使用者圖像</a></li>
+<li><a href="#orgb40eef7">2. 功能</a>
+<ul>
+<li><a href="#org6cf3d46">2.1. 投資筆記</a></li>
+<li><a href="#org3c1b04c">2.2. 投資組合管理</a></li>
+</ul>
+</li>
+<li><a href="#orge8b17dd">3. 術語定義</a></li>
+<li><a href="#org4fbb3e7">4. 情境故事</a>
+<ul>
+<li><a href="#org3beb07d">4.1. 分析議題對持倉的影響</a>
+<ul>
+<li><a href="#org789c256">4.1.1. 我們要解決什麼問題？以及為什麼？</a></li>
+<li><a href="#org55990c9">4.1.2. 情境故事</a></li>
+<li><a href="#org16b4c12">4.1.3. 我們如何定義成功</a></li>
+<li><a href="#org77d86e1">4.1.4. 範圍</a></li>
+</ul>
+</li>
+<li><a href="#org9a9e8c2">4.2. 規劃交易計劃</a>
+<ul>
+<li><a href="#org12b15ce">4.2.1. 我們要解決什麼問題？以及為什麼？</a></li>
+<li><a href="#orgc6ffd68">4.2.2. 情境故事</a></li>
+<li><a href="#org1087a15">4.2.3. 我們如何定義成功</a></li>
+<li><a href="#orgaf647df">4.2.4. 範圍</a></li>
+</ul>
+</li>
+<li><a href="#orga65c572">4.3. 復盤交易</a>
+<ul>
+<li><a href="#org6340378">4.3.1. 我們要解決什麼問題？以及為什麼？</a></li>
+<li><a href="#orgb7f3bb2">4.3.2. 情境故事</a></li>
+<li><a href="#org8cd632f">4.3.3. 我們如何定義成功</a></li>
+<li><a href="#org5a827a1">4.3.4. 範圍</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org47b3ac9">5. 使用者流程</a>
+<ul>
+<li><a href="#org9f9926e">5.1. 導航</a></li>
+<li><a href="#orga550771">5.2. 第一次啟動</a></li>
+<li><a href="#orga9eafe2">5.3. 開啟首頁</a></li>
+<li><a href="#orgaa81fd7">5.4. 連接錢包</a></li>
+<li><a href="#org684d0e2">5.5. 新增節點到頁面</a></li>
+<li><a href="#orgcc7bd84">5.6. 新增節點到圖</a></li>
+<li><a href="#org0937e9a">5.7. 以頁面的方式開啟節點</a></li>
+<li><a href="#orgb6c2b5f">5.8. 以圖的方式開啟節點</a></li>
+<li><a href="#org8a809b4">5.9. 提案購買/賣出</a></li>
+<li><a href="#org199f285">5.10. 處理交易提案</a></li>
+</ul>
+</li>
+<li><a href="#orgf03f373">6. 操作定義</a></li>
+<li><a href="#orgd1612b3">7. 介面示意圖</a>
+<ul>
+<li><a href="#org12a47e5">7.1. 鳥瞰圖</a></li>
+<li><a href="#orga150e1e">7.2. 在鳥瞰圖檢視節點</a></li>
+<li><a href="#orgdea2309">7.3. 處於論點對應的節點</a></li>
+</ul>
+</li>
+<li><a href="#org63d792b">8. 技術架構</a></li>
+<li><a href="#orgc628172">9. 聯絡</a></li>
+</ul>
+</div>
+</div>
+<p>
+本文件描述淬鍊（cuilian）Demo 的設計文件。淬鍊是一個去中心化加密貨幣投資基金管理軟體，允許任何人無需許可的在區塊鏈上建立自己的主題式加密貨幣基金 DAO。
+本 Demo 的動機是以假資料展示個人用介面互動揭露設計概念，取得介面轉換動線回饋，此階段不設計任何 Defi 機制以及代幣經濟。
+</p>
+
+<div id="outline-container-orgb52127f" class="outline-2">
+<h2 id="orgb52127f"><span class="section-number-2">1.</span> 使用者圖像</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+年齡在 35 歲的加密貨幣投資散戶，以 Hold 為主要交易策略。
+</p>
+</div>
+</div>
+<div id="outline-container-orgb40eef7" class="outline-2">
+<h2 id="orgb40eef7"><span class="section-number-2">2.</span> 功能</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+淬鍊包含兩大功能，分別是投資筆記跟投資組合管理。
+</p>
+</div>
+<div id="outline-container-org6cf3d46" class="outline-3">
+<h3 id="org6cf3d46"><span class="section-number-3">2.1.</span> 投資筆記</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+投資筆記提供使用者分析投資標或是重大資訊作為交易的依據。
+</p>
+
+<p>
+當投資人想要計算投資標的的價格跟內在價值時，必定會需要感知整個社會有多少意見，但影響投資標的價格有很多分析師給出不同說法，要判斷誰說得有道理，需要在短時間掌握一門新領域知識，對新知識的掌握度越深入，可以為投資人帶來分析優勢。
+</p>
+
+<p>
+舉例來說，一位投資人會為了要搞懂區塊鏈穩定幣監管範圍對自己的衝擊，需要先閱讀法規草案，對其知識點深入了解細節，所謂知識點即是不解其意的名詞，而要了解其中內涵，需要找出定義，方法可以是閱讀書籍、論文、研究報告，或是關鍵人物在社群媒體過去發表的言論，並且勾勒出整個知識網路，以方便在之後的爭論比較中，分析出有多少種立場、多少種決策結果，不同勢力的攻防點，並預演可能出現的狀況來判斷是否有定價錯誤跟催化因素，並據以低價購入投資標的，獲得超額報酬。
+</p>
+
+<p>
+為了達到這個目的，投資人需要從若干文件，逐步畫出會閱讀這些文件的群體有哪些人，意見領袖又是誰，是否有代表性跟多元性，再繼續深入了解這些人的看法，以判斷政治、社會變遷、以及技術趨勢作為調倉判斷，整個分析過程約略可以下圖形象表示。(圖取自於 Davis, 2010, Concept mapping, mind mapping and argument
+mapping: what are the differences and do they matter?)
+</p>
+
+
+<div id="org6c3624a" class="figure">
+<p><img src="./imgs/kmap.png" alt="kmap.png" />
+</p>
+</div>
+
+<p>
+筆記並可以組織成科技發展地圖，用以盤點技術現況，說明技術與商業成熟度、智財權發展現況等早期技術TRL、早期產品、成熟產品的改良技術等做競爭分析，競爭分析包括團隊過去發展的相關技術、預計導入的相關技術、盤點各節點上的主要競爭者、國內外產業與學界名單、發展現況。
+</p>
+
+
+<div id="org765b9fd" class="figure">
+<p><img src="./imgs/techmap.png" alt="techmap.png" />
+</p>
+</div>
+
+<p>
+又因大多數原始資料為保密文件，安全以及隱私性是重要考量，因此時下流行的雲端筆記如 Roam Research 、Notion、Obsidian 、EverNote 皆不在其考量範圍。此外，為了避免工具失去維護導致重要資料遺失，投資人會希望儲存知識的載體應該為純文字（plan-text）檔案，且為通用格式，但又希望可依據不同需求作出不同的同構映射，舉例來說，映射成時間軸，地圖，人物關係，或是在說服階段時如 <a href="../../../../Dropbox/org/roam/20201212110229-zettelkasten.html#ID-85c280eb-893a-48e6-859c-ee665e3f41af">Zettelkasten</a> 一樣可以將不同的爭論重組成一篇投資計畫，並據此執行。
+</p>
+</div>
+</div>
+<div id="outline-container-org3c1b04c" class="outline-3">
+<h3 id="org3c1b04c"><span class="section-number-3">2.2.</span> 投資組合管理</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+投資組合提供使用者追蹤投資標的績效以及當初交易的依據筆記。
+</p>
+
+<p>
+紀錄交易的細節，在之後整合 DAO 功能時才考慮多人決策的功能。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge8b17dd" class="outline-2">
+<h2 id="orge8b17dd"><span class="section-number-2">3.</span> 術語定義</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+本章描述術語定義。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">中文</th>
+<th scope="col" class="org-left">英文</th>
+<th scope="col" class="org-left">一句話描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">每日資訊流</td>
+<td class="org-left">dailystream</td>
+<td class="org-left">以時間排序顯示日記的頁面</td>
+</tr>
+
+<tr>
+<td class="org-left">錢包</td>
+<td class="org-left">wallet</td>
+<td class="org-left">加密貨幣錢包</td>
+</tr>
+
+<tr>
+<td class="org-left">頁</td>
+<td class="org-left">page</td>
+<td class="org-left">包含許多子節點的節點</td>
+</tr>
+
+<tr>
+<td class="org-left">節點</td>
+<td class="org-left">node</td>
+<td class="org-left">具有原子化（atomic）性質的筆記</td>
+</tr>
+
+<tr>
+<td class="org-left">圖</td>
+<td class="org-left">graph</td>
+<td class="org-left">以階層圖呈現節點內的內容與關係</td>
+</tr>
+
+<tr>
+<td class="org-left">快速切換</td>
+<td class="org-left">nodeswitcher</td>
+<td class="org-left">搜尋開啟或建立頁或節點</td>
+</tr>
+
+<tr>
+<td class="org-left">鳥瞰圖</td>
+<td class="org-left">birdeye</td>
+<td class="org-left">顯示全部的節點與關係</td>
+</tr>
+
+<tr>
+<td class="org-left">儲存庫</td>
+<td class="org-left">vault</td>
+<td class="org-left">存放 .org 的目錄</td>
+</tr>
+
+<tr>
+<td class="org-left">投資組合</td>
+<td class="org-left">portfolio</td>
+<td class="org-left">顯示投資組合及當前損益</td>
+</tr>
+
+<tr>
+<td class="org-left">快速紀錄</td>
+<td class="org-left">capture</td>
+<td class="org-left">快速紀錄並建立節點的編輯區</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org4fbb3e7" class="outline-2">
+<h2 id="org4fbb3e7"><span class="section-number-2">4.</span> 情境故事</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+本章節描述情境故事。
+</p>
+</div>
+<div id="outline-container-org3beb07d" class="outline-3">
+<h3 id="org3beb07d"><span class="section-number-3">4.1.</span> 分析議題對持倉的影響</h3>
+<div class="outline-text-3" id="text-4-1">
+</div>
+<div id="outline-container-org789c256" class="outline-4">
+<h4 id="org789c256"><span class="section-number-4">4.1.1.</span> 我們要解決什麼問題？以及為什麼？</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+不同投資者、創辦人在議題常有意見衝突，使用者需要了解是否會對持倉有索影響。使用者目前使用 org-roam 以<a href="../../../../Dropbox/org/roam/20201212110229-zettelkasten.html#ID-85c280eb-893a-48e6-859c-ee665e3f41af">Zettelkasten</a> 方式來整理術語、相關資訊連結、跟論點。
+目前沒有像 Logseq, Obsidian, project meta 將筆記的關係以視覺化方式呈現出來，讓使用者能有全局觀。
+</p>
+</div>
+</div>
+<div id="outline-container-org55990c9" class="outline-4">
+<h4 id="org55990c9"><span class="section-number-4">4.1.2.</span> 情境故事</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+當意見領袖熱議的議題出現時，我希望能針對不同意見領袖的論點有全局觀，所以我可以掌握有多少立場跟論述依據，並選擇自己的行動。
+</p>
+</div>
+</div>
+<div id="outline-container-org16b4c12" class="outline-4">
+<h4 id="org16b4c12"><span class="section-number-4">4.1.3.</span> 我們如何定義成功</h4>
+<div class="outline-text-4" id="text-4-1-3">
+<p>
+使用者能夠從不同渠道的訊息中整理出關鍵人物所持的論點及其支持或反對的對應關係。
+</p>
+</div>
+</div>
+<div id="outline-container-org77d86e1" class="outline-4">
+<h4 id="org77d86e1"><span class="section-number-4">4.1.4.</span> 範圍</h4>
+<div class="outline-text-4" id="text-4-1-4">
+<p>
+一個能將準備好的 org-roam 假資料以圖像方式編輯筆記關係的功能，包含一個能將不同檔案內的筆記段落以卡片方式顯示在畫布上的圖像編輯器。此版不包含編輯功能。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a9e8c2" class="outline-3">
+<h3 id="org9a9e8c2"><span class="section-number-3">4.2.</span> 規劃交易計劃</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-org12b15ce" class="outline-4">
+<h4 id="org12b15ce"><span class="section-number-4">4.2.1.</span> 我們要解決什麼問題？以及為什麼？</h4>
+<div class="outline-text-4" id="text-4-2-1">
+</div>
+</div>
+<div id="outline-container-orgc6ffd68" class="outline-4">
+<h4 id="orgc6ffd68"><span class="section-number-4">4.2.2.</span> 情境故事</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+當我需要了解虧損原因時，我希望能夠查看該筆虧損交易的原因，所以我可以避免再次犯下錯誤。
+</p>
+</div>
+</div>
+<div id="outline-container-org1087a15" class="outline-4">
+<h4 id="org1087a15"><span class="section-number-4">4.2.3.</span> 我們如何定義成功</h4>
+<div class="outline-text-4" id="text-4-2-3">
+</div>
+</div>
+<div id="outline-container-orgaf647df" class="outline-4">
+<h4 id="orgaf647df"><span class="section-number-4">4.2.4.</span> 範圍</h4>
+<div class="outline-text-4" id="text-4-2-4">
+</div>
+</div>
+</div>
+<div id="outline-container-orga65c572" class="outline-3">
+<h3 id="orga65c572"><span class="section-number-3">4.3.</span> 復盤交易</h3>
+<div class="outline-text-3" id="text-4-3">
+</div>
+<div id="outline-container-org6340378" class="outline-4">
+<h4 id="org6340378"><span class="section-number-4">4.3.1.</span> 我們要解決什麼問題？以及為什麼？</h4>
+<div class="outline-text-4" id="text-4-3-1">
+</div>
+</div>
+<div id="outline-container-orgb7f3bb2" class="outline-4">
+<h4 id="orgb7f3bb2"><span class="section-number-4">4.3.2.</span> 情境故事</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<p>
+當我需要了解虧損原因時，我希望能夠查看該筆虧損交易的原因，所以我可以避免再次犯下錯誤。
+</p>
+</div>
+</div>
+<div id="outline-container-org8cd632f" class="outline-4">
+<h4 id="org8cd632f"><span class="section-number-4">4.3.3.</span> 我們如何定義成功</h4>
+<div class="outline-text-4" id="text-4-3-3">
+</div>
+</div>
+<div id="outline-container-org5a827a1" class="outline-4">
+<h4 id="org5a827a1"><span class="section-number-4">4.3.4.</span> 範圍</h4>
+<div class="outline-text-4" id="text-4-3-4">
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org47b3ac9" class="outline-2">
+<h2 id="org47b3ac9"><span class="section-number-2">5.</span> 使用者流程</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+本章描述框線圖（wireframe）的轉換動線。
+</p>
+</div>
+<div id="outline-container-org9f9926e" class="outline-3">
+<h3 id="org9f9926e"><span class="section-number-3">5.1.</span> 導航</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<div id="org56a06e6" class="figure">
+<p><img src="imgs/userflow_navigation.png" alt="userflow_navigation.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga550771" class="outline-3">
+<h3 id="orga550771"><span class="section-number-3">5.2.</span> 第一次啟動</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<div id="org29713a4" class="figure">
+<p><img src="imgs/userflow_onboarding.png" alt="userflow_onboarding.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga9eafe2" class="outline-3">
+<h3 id="orga9eafe2"><span class="section-number-3">5.3.</span> 開啟首頁</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+預設首頁是每日資訊流頁面。
+</p>
+
+<div id="orgc024bad" class="figure">
+<p><img src="imgs/userflow_home.png" alt="userflow_home.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaa81fd7" class="outline-3">
+<h3 id="orgaa81fd7"><span class="section-number-3">5.4.</span> 連接錢包</h3>
+<div class="outline-text-3" id="text-5-4">
+
+<div id="orga9b9d17" class="figure">
+<p><img src="imgs/userflow_connectwallet.png" alt="userflow_connectwallet.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org684d0e2" class="outline-3">
+<h3 id="org684d0e2"><span class="section-number-3">5.5.</span> 新增節點到頁面</h3>
+<div class="outline-text-3" id="text-5-5">
+
+<div id="org265868f" class="figure">
+<p><img src="imgs/userflow_insertnode.png" alt="userflow_insertnode.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcc7bd84" class="outline-3">
+<h3 id="orgcc7bd84"><span class="section-number-3">5.6.</span> 新增節點到圖</h3>
+<div class="outline-text-3" id="text-5-6">
+
+<div id="org9787649" class="figure">
+<p><img src="imgs/userflow_addtograph.png" alt="userflow_addtograph.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0937e9a" class="outline-3">
+<h3 id="org0937e9a"><span class="section-number-3">5.7.</span> 以頁面的方式開啟節點</h3>
+<div class="outline-text-3" id="text-5-7">
+
+<div id="org96e6e3c" class="figure">
+<p><img src="imgs/userflow_opennode.png" alt="userflow_opennode.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb6c2b5f" class="outline-3">
+<h3 id="orgb6c2b5f"><span class="section-number-3">5.8.</span> 以圖的方式開啟節點</h3>
+<div class="outline-text-3" id="text-5-8">
+
+<div id="org30f4a93" class="figure">
+<p><img src="imgs/userflow_viewgraph.png" alt="userflow_viewgraph.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a809b4" class="outline-3">
+<h3 id="org8a809b4"><span class="section-number-3">5.9.</span> 提案購買/賣出</h3>
+<div class="outline-text-3" id="text-5-9">
+
+<div id="org7091c0a" class="figure">
+<p><img src="imgs/userflow_fileproposal.png" alt="userflow_fileproposal.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org199f285" class="outline-3">
+<h3 id="org199f285"><span class="section-number-3">5.10.</span> 處理交易提案</h3>
+<div class="outline-text-3" id="text-5-10">
+
+<div id="orgfe4cf85" class="figure">
+<p><img src="imgs/userflow_processproposal.png" alt="userflow_processproposal.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf03f373" class="outline-2">
+<h2 id="orgf03f373"><span class="section-number-2">6.</span> 操作定義</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+本章描述操作快捷鍵。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">按鍵組合</th>
+<th scope="col" class="org-left">說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Cmd + o</td>
+<td class="org-left">開啟儲存庫</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + 1</td>
+<td class="org-left">開啟快速切換</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + 2</td>
+<td class="org-left">開啟鳥瞰圖</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + 3</td>
+<td class="org-left">開啟投資組合</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + f</td>
+<td class="org-left">尋找節點</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + i</td>
+<td class="org-left">插入節點</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + s</td>
+<td class="org-left">存擋</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + c</td>
+<td class="org-left">複製</td>
+</tr>
+
+<tr>
+<td class="org-left">Cmd + v</td>
+<td class="org-left">貼上</td>
+</tr>
+
+<tr>
+<td class="org-left">Esc</td>
+<td class="org-left">取消當前動作</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgd1612b3" class="outline-2">
+<h2 id="orgd1612b3"><span class="section-number-2">7.</span> 介面示意圖</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+這裡以名為 SenseTW 的線上意見整理工具作為介面設計參考。sensetw 當初開發目的是為了做社會議題分析。
+</p>
+</div>
+<div id="outline-container-org12a47e5" class="outline-3">
+<h3 id="org12a47e5"><span class="section-number-3">7.1.</span> 鳥瞰圖</h3>
+<div class="outline-text-3" id="text-7-1">
+
+<div id="org5aa16f2" class="figure">
+<p><img src="./imgs/nuclear_whole_picture.png" alt="nuclear_whole_picture.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga150e1e" class="outline-3">
+<h3 id="orga150e1e"><span class="section-number-3">7.2.</span> 在鳥瞰圖檢視節點</h3>
+<div class="outline-text-3" id="text-7-2">
+
+<div id="org5f4a7d2" class="figure">
+<p><img src="./imgs/nuclear_inspector2.png" alt="nuclear_inspector2.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdea2309" class="outline-3">
+<h3 id="orgdea2309"><span class="section-number-3">7.3.</span> 處於論點對應的節點</h3>
+<div class="outline-text-3" id="text-7-3">
+
+<div id="org1b05171" class="figure">
+<p><img src="./imgs/nuclear_context.png" alt="nuclear_context.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org63d792b" class="outline-2">
+<h2 id="org63d792b"><span class="section-number-2">8.</span> 技術架構</h2>
+<div class="outline-text-2" id="text-8">
+<ol class="org-ol">
+<li>使用者透過 MacOs Desktop App 執行區塊鏈上的合約。(demo 不實作區塊鏈功能)</li>
+<li>使用者的資料儲存在本地端。</li>
+<li>使用者擁有的資料將能夠很容易地與其他文字編輯器、文字格式的記帳軟體整合。(以 org-mode 格式為主)</li>
+</ol>
+
+<div id="orgdf3607f" class="figure">
+<p><img src="imgs/system_context.png" alt="system_context.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc628172" class="outline-2">
+<h2 id="orgc628172"><span class="section-number-2">9.</span> 聯絡</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+歡迎在 Twitter 聯絡 @hychen 給予設計意見。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Hsin-Yi Chen</p>
+<p class="date">Created: 2021-12-28 Tue 19:43</p>
+</div>
+</body>
+</html>
